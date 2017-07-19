@@ -52,7 +52,14 @@ NSString* addVersionToUrlIfRequired(NSString* page) {
     // Because it's a private function in cordova, we invoke it this way:
     cdvViewController.startPage = page;
     NSURL* url = [cdvViewController performSelector:@selector(appUrl)];
+
     [(UIWebView*)self.webView loadRequest:[NSURLRequest requestWithURL:url]];
+}
+
+- (void)webViewDidStartLoad:(UIWebView*)theWebView {  
+ NSLog(@"Resetting plugins due to page load.");  
+ [_commandQueue resetRequestId];  
+ [[NSNotificationCenter defaultCenter] postNotification:[NSNotification notificationWithName:CDVPluginResetNotification object:self.webView]];  
 }
 
 #pragma mark -
